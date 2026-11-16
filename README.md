@@ -41,7 +41,7 @@ Compared with building a mesh of IPsec or GRE tunnels between customer sites, MP
 ## Topology and addressing
 
 ![Topology](images/01-topology.png)
-*CML topology: three provider routers in the core and edge, plus four customer sites.*
+*CML topology: fourx provider routers in the core and edge, plus four customer sites.*
 
 ### Devices
 
@@ -81,7 +81,7 @@ The provider AS number is **100**, and all BGP sessions are iBGP between loopbac
 
 **Overlapping customer address space.** Both customers use `172.16.1.0/24` at their branch and `172.16.2.0/24` at their HQ, and the two branch CEs even share the same loopback address `172.16.1.1`. This makes the isolation test meaningful: the same destination IP must reach a different router depending on which customer asks.
 
-**One PE serves both customers.** PE-3 holds both VRFs, one per customer-facing interface. This shows that RD and RT, not separate hardware, keep customers apart.
+**One PE serves both customers. PE-3 holds both VRFs, one per customer-facing interface. This shows that separate VRFs, not separate hardware, keep customers apart. Each VRF has its own routing table, so a route learned for one customer never appears in the other customer's table. The route distinguisher (RD) makes identical prefixes unique inside the BGP table, and the route targets (RT) decide which VRF imports which routes.
 
 **PE-1 and PE-2 peer only with PE-3.** Each customer has exactly two sites and both involve PE-3, so every route reaches the PE that needs it. A third site on another PE would require a full mesh or a route reflector.
 
